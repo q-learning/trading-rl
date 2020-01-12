@@ -28,7 +28,7 @@ ENV_NAME = 'trading-rl'
 trailing = 'trailing'
 deng = 'deng'
 
-METHOD = deng  # Choose between environments
+METHOD = trailing #deng  # Choose between environments
 
 directory = str(Path.cwd().parent)  # Get the parent directory of the current working directory
 data_directory = directory + "/data"
@@ -67,7 +67,7 @@ COST = 0.3  # Cost of changing financial position
 
 # cost in each change of financial position
 # if false only when short->long, long->short (neutral in between dont count)
-CE = False
+CE = True #False
 # double penalty when the change from short->long or long->short is immediate
 DP = False
 
