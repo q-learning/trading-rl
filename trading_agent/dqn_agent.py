@@ -220,6 +220,7 @@ def train_w_validation(env, dqn):
             dqn.load_weights(filepath + weights_file)
 
             env.rewards = []
+            env.profits = []
             env.pnls = []
             env.val_starts_index = 0
             dqn.test(env, nb_episodes=TEST_EPOCHS_GEN, nb_max_episode_steps=TEST_STEPS_GEN, visualize=False)

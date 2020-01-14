@@ -58,7 +58,9 @@ class Environment(gym.Env):
         self.validate = False
 
         self.rewards = []
+        self.profits = []
         self.epoch_reward = 0
+        self.epoch_profit = []
 
         # Borrow this variable from Trail just to calculate the PnL correctly
         # This should always be True inside Deng
@@ -144,7 +146,7 @@ class Environment(gym.Env):
         #return 0
         prices_diff=np.concatenate([[0.0],np.diff(values)])
         pnl=np.cumsum([actions*prices_diff])
-        plt.plot_profit(self.folder,pnl,values,actions)
+        plt.plot_profit(self.folder,pnl,np.cumsum(self.epoch_profit),values,actions)
         return(pnl[-1])
 
     def trade(self, c_val):

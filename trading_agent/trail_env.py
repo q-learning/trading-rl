@@ -72,10 +72,13 @@ class Trail(Environment):
             state = [self.position, value, self.action, self.value]
             self.memory.append(state)
 
-            self.reward = self.get_reward()
-            self.epoch_reward += self.reward
-
+            # Move the agent to the next timestep
             self.position += 1
+
+            self.reward, self.profit = self.get_reward()
+            self.epoch_reward += self.reward
+            self.epoch_profit.append(self.profit)
+
             if self.reset_margin:
                 # if the agent gets out of boundaries reset him
                 value = self.data[self.position]
@@ -116,7 +119,9 @@ class Trail(Environment):
         # note that the action being taken is for the position X but the input
 
         self.rewards.append(self.epoch_reward)
+        self.profits.append(np.cumsum(self.epoch_profit))
         self.epoch_reward = 0
+        self.epoch_profit = []
         self.memory = []
         self.long_actions = []
         self.short_actions = []
@@ -181,6 +186,7 @@ class Trail(Environment):
         up_margin = self.data[self.position] + self.margin
         c_val = self.data[self.position]
         pr_val = self.data[self.position - 1]
+        profit = 0
         down_margin = self.data[self.position] - self.margin
 
         # Because its almost impossible to get the exact number, use an acceptable slack
@@ -191,18 +197,28 @@ class Trail(Environment):
         else:
             reward = ( self.value - up_margin ) / ( c_val - up_margin )
 
+        change_position_cost = 0.0
+        if self.action == BUY:
+            profit = c_val - pr_val
+        elif self.action == SELL:
+            profit = pr_val - c_val
+
+
         if self.ce:
             if self.action != self.prev_action:
+                profit -= change_position_cost
                 reward = reward - np.abs(reward * self.cost)
         else:
             if (self.action == BUY or self.action == SELL) and (self.action != self.prev_fin_pos):
+                profit -= change_position_cost
                 reward = reward - np.abs(reward * self.cost)
 
         if self.dp:
             if ((self.prev_action == BUY) and (self.action == SELL)) or ((self.prev_action == SELL) and (self.action == BUY)):
+                profit -= change_position_cost
                 reward = reward - np.abs(reward * self.cost)
 
         self.trade(c_val)
         self.prev_action = self.action
 
-        return reward
+        return reward, profit
