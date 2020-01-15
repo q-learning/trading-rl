@@ -144,7 +144,16 @@ class Environment(gym.Env):
         """
         #warnings.warn("No method implemented to calculate the PnL! Returning zero...", Warning)
         #return 0
-        prices_diff=np.concatenate([[0.0],np.diff(values)])
+        prices_diff=np.concatenate([np.diff(values),[0.0]])
+        correct_actions=[]
+        action=actions[0]
+        for i in range(len(actions)):
+            if action!=NEUTRAL:
+               correct_actions.append(actions[i])
+               action=actions[i]
+            else:
+               correct_actions.append(action)
+            
         pnl=np.cumsum([actions*prices_diff])
         plt.plot_profit(self.folder,pnl,np.cumsum(self.epoch_profit),values,actions)
         return(pnl[-1])

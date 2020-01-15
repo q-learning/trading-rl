@@ -198,9 +198,9 @@ class Trail(Environment):
             reward = ( self.value - up_margin ) / ( c_val - up_margin )
 
         change_position_cost = 0.0
-        if self.action == BUY:
+        if self.prev_fin_pos == BUY:
             profit = c_val - pr_val
-        elif self.action == SELL:
+        elif self.prev_fin_pos == SELL:
             profit = pr_val - c_val
 
 
