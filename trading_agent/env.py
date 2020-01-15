@@ -148,7 +148,7 @@ class Environment(gym.Env):
         correct_actions=[]
         action=actions[0]
         for i in range(len(actions)):
-            if action!=NEUTRAL:
+            if actions[i]!=NEUTRAL:
                correct_actions.append(actions[i])
                action=actions[i]
             else:
