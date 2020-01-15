@@ -154,8 +154,8 @@ class Environment(gym.Env):
             else:
                correct_actions.append(action)
             
-        pnl=np.cumsum([actions*prices_diff])
-        plt.plot_profit(self.folder,pnl,np.cumsum(self.epoch_profit),values,actions)
+        pnl=np.cumsum([correct_actions*prices_diff])
+        plt.plot_profit(self.folder,pnl,np.cumsum(self.epoch_profit),values,correct_actions)
         return(pnl[-1])
 
     def trade(self, c_val):
